@@ -1,7 +1,11 @@
 
 
+import 'dart:async';
+
 import 'package:covid_app/Controller/Export/export_screen.dart';
 import 'dart:math' as math;
+
+
 
 
 class SplashScreen extends StatefulWidget {
@@ -31,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   void initState() {
     // TODO: implement initState
     super.initState();
-   // Timer(const Duration(seconds: 5), () => Navigator.push(context, MaterialPageRoute(builder: (context) => const WorldStates())));
+   Timer(const Duration(seconds: 3), () => Navigator.push(context, MaterialPageRoute(builder: (context) => const WorldScreen())));
   }
 
 
@@ -39,6 +43,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   Widget build(BuildContext context) {
     final data =MediaQuery.of(context);
     return Scaffold(
+      backgroundColor:AppColors.kBGColor,
       body: SafeArea(child:
       Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -59,13 +64,17 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
               },
               ),
-          SizedBox(height: data.size.height * 0.08,),
-          const Text("Covid\nTracker App",
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              color:AppColors.kWhite
-            ),),
+          SizedBox(height: data.size.height * 0.001,),
+          const Align(
+            child: Text("Covid\nTracker App",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                color:AppColors.kWhite
+              ),
+            ),
+          ),
         ],
       ),
     ),
