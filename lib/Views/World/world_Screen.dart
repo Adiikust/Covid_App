@@ -1,13 +1,16 @@
 
-
 import 'package:covid_app/Controller/Export/export_screen.dart';
+import 'package:covid_app/Models/WorldStateModel.dart';
+import 'package:covid_app/Services/world_state_model_Fetch.dart';
 import 'package:covid_app/Widget/build_Row.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class WorldScreen extends StatefulWidget {
   const WorldScreen({Key? key}) : super(key: key);
 
   @override
+
   State<WorldScreen> createState() => _WorldScreenState();
 }
 
@@ -18,6 +21,7 @@ class _WorldScreenState extends State<WorldScreen> with TickerProviderStateMixin
     vsync: this,
   )..repeat();
 
+  WorldStatesViewModel worldStatesViewModel=WorldStatesViewModel();
   @override
   void dispose() {
     _controller.dispose();
@@ -25,9 +29,9 @@ class _WorldScreenState extends State<WorldScreen> with TickerProviderStateMixin
 
   }
 
-
   @override
   Widget build(BuildContext context) {
+
     final data =MediaQuery.of(context);
     return Scaffold(
       //backgroundColor:AppColors.kBGColor,
@@ -37,63 +41,82 @@ class _WorldScreenState extends State<WorldScreen> with TickerProviderStateMixin
          child: Column(
            children:[
              SizedBox(height: data.size.height * 0.02,),
-            const PieChart(
-              centerTextStyle: TextStyle(color: AppColors.kWhite),
-              dataMap: {
-                "TodayCases": 13,
-                "Deaths": 65,
-                "Recovered": 58,
-              },
-              colorList: [
-                Color(0xff4285F4),
-                Color(0xff1aa260),
-                Color(0xffde5246),
-              ],
 
-            ),
-             SizedBox(height: data.size.height * 0.04,),
-             Card(elevation: 5,
-               //color: AppColors.kCardColor,
-               child: Padding(
-                 padding:  EdgeInsets.symmetric(vertical: data.size.height *0.02,horizontal: data.size.width *0.02),
-                 child: Column(
-                   children: [
-                     BuildRow(title: "Cases", value: "609581728"),
-                     BuildRow(title: "TodayCases", value: "233528"),
-                     BuildRow(title: "Deaths", value: "6501641"),
-                     BuildRow(title: "Recovered", value: "585879869"),
-                     BuildRow(title: "TodayDeaths", value: "536"),
+             FutureBuilder(
+               future: worldStatesViewModel.fetchWorldRecords(),
+                 builder: (context,AsyncSnapshot<WorldStateModel>snapshot){
+                 if(!snapshot.hasData){
+                   return Expanded(
+                     flex: 1,
+                     child: SpinKitFadingCircle(
+                       color: AppColors.kBGColor,
+                       size: 50.0,
+                       controller: _controller,
+                     ),
+                   );
+                 }else{
+                   return Column(children: [
+                     PieChart(
+                       centerTextStyle: const TextStyle(color: AppColors.kWhite),
+                       dataMap: {
+                         "TodayCases": double.parse(snapshot.data!.recovered.toString()),
+                         "Deaths":double.parse(snapshot.data!.recovered.toString()),
+                         "Recovered":double.parse(snapshot.data!.recovered.toString()),
 
-                   ],
-                 ),
-               ),
+                         // double.parse(snapshot.data!.recovered.toString()),
+                       },
+                       colorList: const [
+                         Color(0xff4285F4),
+                         Color(0xff1aa260),
+                         Color(0xffde5246),
+                       ],
+
+                     ),
+                     SizedBox(height: data.size.height * 0.04,),
+                     Card(elevation: 5,
+                       child: Padding(
+                         padding:  EdgeInsets.symmetric(vertical: data.size.height *0.02,horizontal: data.size.width *0.02),
+                         child: Column(
+                           children: [
+                             BuildRow(title: "TodayCases", value: snapshot.data!.todayCases.toString()),
+                             BuildRow(title: "TodayDeaths", value: snapshot.data!.todayDeaths.toString()),
+                             BuildRow(title: "Recovered", value: snapshot.data!.recovered.toString()),
+                             BuildRow(title: "todayRecovered", value: snapshot.data!.todayRecovered.toString()),
+                             BuildRow(title: "Deaths", value: snapshot.data!.deaths.toString()),
+                             BuildRow(title: "Critical", value: snapshot.data!.critical.toString()),
+                           ],
+                         ),
+                       ),
+                     ),
+                     SizedBox(height: data.size.height * 0.04,),
+                     GestureDetector(
+                       onTap: (){
+                       },
+                       child: Container(
+                         height: 50,
+                         decoration: BoxDecoration(
+                             color: AppColors.kButton,
+                             borderRadius:BorderRadius.circular(10)
+                         ),
+                         child: const Center(
+                           child: Text('Track Countries',
+                             style: TextStyle(
+                                 color: AppColors.kWhite,
+                                 fontSize: 18,
+                                 fontWeight: FontWeight.bold),
+                           ),
+                         ),
+                       ),
+                     ),
+
+                   ],);
+                 }
+                 },
              ),
-             SizedBox(height: data.size.height * 0.04,),
-        GestureDetector(
-          onTap: (){
-           // Navigator.push(context, MaterialPageRoute(builder: (context) => const CountriesListScreen()));
-          },
-          child: Container(
-            height: 50,
-            decoration: BoxDecoration(
-                color: AppColors.kButton,
-                borderRadius:BorderRadius.circular(10)
-            ),
-            child: const Center(
-              child: Text('Track Countries',
-                style: TextStyle(
-                    color: AppColors.kWhite,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ),
-           ],
-         ),
-       ),
-     ),
-
+      ]
+    ),
+    ),
+      ),
     );
-  }
+    }
 }
