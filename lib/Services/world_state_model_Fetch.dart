@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 
+
 import 'package:covid_app/Models/WorldStateModel.dart';
 import 'package:covid_app/Services/Utitlies/app_url_screen.dart';
 import 'package:http/http.dart' as http;
@@ -18,4 +19,5 @@ class WorldStatesViewModel {
       throw Exception('Error');
     }
   }
+
 }

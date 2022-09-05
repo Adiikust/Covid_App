@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Covid App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.blue
       ),
       home: const SplashScreen(),
     );

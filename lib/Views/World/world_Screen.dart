@@ -2,6 +2,7 @@
 import 'package:covid_app/Controller/Export/export_screen.dart';
 import 'package:covid_app/Models/WorldStateModel.dart';
 import 'package:covid_app/Services/world_state_model_Fetch.dart';
+import 'package:covid_app/Views/Countries/country_Screen.dart';
 import 'package:covid_app/Widget/build_Row.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -91,6 +92,7 @@ class _WorldScreenState extends State<WorldScreen> with TickerProviderStateMixin
                      SizedBox(height: data.size.height * 0.04,),
                      GestureDetector(
                        onTap: (){
+                         Navigator.push(context, MaterialPageRoute(builder: (context) => const CountryScreen()));
                        },
                        child: Container(
                          height: 50,
